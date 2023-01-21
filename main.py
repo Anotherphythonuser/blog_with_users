@@ -86,7 +86,7 @@ def load_user(id):
 @app.route('/')
 def get_all_posts():
     posts = BlogPost.query.all()
-    return render_template("index.html", all_posts=posts, logged_in=current_user.is_authenticated)
+    return render_template("index.html", all_posts=posts, logged_in=current_user.is_authenticated, year=date.today().year)
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -109,7 +109,7 @@ def register():
             db.session.commit()
             login_user(user)
             return redirect(url_for('get_all_posts'))
-    return render_template("register.html", form=form)
+    return render_template("register.html", form=form, year=date.today().year)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -131,7 +131,7 @@ def login():
         except AttributeError:
             flash("The Email you've entered doesn't exists. Please try again.")
             return redirect(url_for('login'))
-    return render_template("login.html", form=log_in)
+    return render_template("login.html", form=log_in, year=date.today().year)
 
 
 @app.route('/logout')
@@ -158,17 +158,17 @@ def show_post(post_id):
         else:
             flash("Kindly Log-in/Register to comment on a post.")
             return redirect(url_for("login"))
-    return render_template("post.html", post=requested_post, comments=comment, all_comments=all_comments, logged_in=current_user.is_authenticated)
+    return render_template("post.html", post=requested_post, comments=comment, all_comments=all_comments, logged_in=current_user.is_authenticated, year=date.today().year)
 
 
 @app.route("/about")
 def about():
-    return render_template("about.html")
+    return render_template("about.html", year=date.today().year)
 
 
 @app.route("/contact")
 def contact():
-    return render_template("contact.html")
+    return render_template("contact.html", year=date.today().year)
 
 
 @app.route("/new-post", methods=['GET','POST'])
@@ -187,7 +187,7 @@ def add_new_post():
         db.session.add(new_post)
         db.session.commit()
         return redirect(url_for("get_all_posts"))
-    return render_template("make-post.html", form=form)
+    return render_template("make-post.html", form=form, year=date.today().year)
 
 
 @app.route("/edit-post/<int:post_id>")
@@ -210,7 +210,7 @@ def edit_post(post_id):
         db.session.commit()
         return redirect(url_for("show_post", post_id=post.id))
 
-    return render_template("make-post.html", form=edit_form)
+    return render_template("make-post.html", form=edit_form, year=date.today().year)
 
 
 @app.route("/delete/<int:post_id>")
